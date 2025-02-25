@@ -1,11 +1,22 @@
 import React from 'react';
 
-const TodoList = ({ todos, onToggleTodo, onDeleteTodo }) => {
+// Importer l'interface Todo depuis App.tsx
+import { Todo } from '../App'; // Ajustez le chemin selon votre structure de dossiers
+
+// Définition des props du composant
+interface TodoListProps {
+  todos: Todo[];
+  onToggleTodo: (id: string) => void;
+  onDeleteTodo: (id: string) => void;
+}
+
+
+const TodoList: React.FC<TodoListProps> = ({ todos, onToggleTodo, onDeleteTodo }) => {
   return (
     <div style={{ margin: '1rem' }}>
       {todos.map(todo => (
         <div
-          key={todo.id}
+          key={todo._id}
           style={{
             padding: '0.5rem',
             margin: '0.5rem 0',
@@ -16,7 +27,7 @@ const TodoList = ({ todos, onToggleTodo, onDeleteTodo }) => {
           }}
         >
           <span
-            onClick={() => onToggleTodo(todo.id)}
+            onClick={() => onToggleTodo(todo._id)}
             style={{
               cursor: 'pointer',
               textDecoration: todo.completed ? 'line-through' : 'none',

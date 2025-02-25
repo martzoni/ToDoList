@@ -4,10 +4,17 @@ import TodoForm from './components/TodoForm';
 import CategorySelector from './components/CategorySelector';
 import TodoList from './components/TodoList'; // Import the new component
 
-function App() {
-  const [todos, setTodos] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('Tout');
+// Définition du type Todo
+export interface Todo {
+  _id: string;
+  text: string;
+  category: string;
+  completed: boolean;
+}
 
+function App() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Tout');
 
   // Charger les todos au démarrage
   useEffect(() => {
@@ -26,7 +33,7 @@ function App() {
   };
 
   // Fonction pour ajouter une todo
-  const addTodo = async (text, category) => {
+  const addTodo = async (text: string, category: string) => {
     try {
       const response = await fetch('http://localhost:3000/api/todos', {
         method: 'POST',
@@ -43,14 +50,14 @@ function App() {
   };
 
   // Fonction pour basculer l'état d'une todo
-  const toggleTodo = async (id) => {
+  const toggleTodo = async (id: string) => {
     try {
       const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
         method: 'PUT',
       });
       const updatedTodo = await response.json();
       setTodos(todos.map(todo =>
-        todo.id === id ? updatedTodo : todo
+        todo._id === id ? updatedTodo : todo
       ));
     } catch (error) {
       console.error('Erreur lors de la modification:', error);
@@ -58,7 +65,7 @@ function App() {
   };
 
   // Fonction pour supprimer une todo
-  const deleteTodo = async (id) => {
+  const deleteTodo = async (id: string) => {
     try {
       await fetch(`http://localhost:3000/api/todos/${id}`, {
         method: 'DELETE',

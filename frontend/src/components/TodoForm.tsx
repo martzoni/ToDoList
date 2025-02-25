@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 
-function TodoForm({ onAddTodo }) {
+interface TodoFormProps {
+  onAddTodo: (text: string, category: string) => void;
+}
+
+function TodoForm({ onAddTodo }: TodoFormProps) {
   const [newTodo, setNewTodo] = useState('');
   const [category, setCategory] = useState('Personnel');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (newTodo.trim()) {
       onAddTodo(newTodo, category);
@@ -18,13 +22,13 @@ function TodoForm({ onAddTodo }) {
       <input
         type="text"
         value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setNewTodo(e.target.value)}
         placeholder="Nouvelle tâche"
         style={{ padding: '0.5rem' }}
       />
       <select
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
         style={{ padding: '0.5rem', marginRight: '0.5rem' }}
       >
         <option value="Personnel">Personnel</option>
