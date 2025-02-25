@@ -1,4 +1,9 @@
-function CategorySelector({ selected, onSelect }) {
+interface CategorySelectorProps {
+	selected: string;
+	onSelect: (category: string) => void;
+  }
+
+function CategorySelector({ selected, onSelect }: CategorySelectorProps) {
 	const categories = ['Tout', 'Personnel', 'Travail', 'Courses'];
 
 	return (

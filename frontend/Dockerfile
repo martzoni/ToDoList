@@ -4,6 +4,8 @@ FROM node:20
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+RUN npm install -D typescript @types/react @types/react-dom @vitejs/plugin-react
+
 COPY . .
 
 EXPOSE 5173
