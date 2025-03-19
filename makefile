@@ -17,6 +17,12 @@ clean:
 build:
 	docker compose build
 
+# Re
+re:
+	docker compose down
+	docker compose build
+	docker compose up -d
+
 # Voir les logs de tous les conteneurs
 logs:
 	docker compose logs -f
