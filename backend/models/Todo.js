@@ -1,21 +1,37 @@
+// backend/models/Todo.js
 const mongoose = require('mongoose');
 
 const todoSchema = new mongoose.Schema({
-  text: {
+  title: {
     type: String,
-    required: true,  // Champ obligatoire
-    trim: true      // Enlève les espaces au début/fin
+    required: true,
+    trim: true
   },
-  category: {
+  description: {
     type: String,
-    required: true
+    trim: true
   },
   completed: {
     type: Boolean,
-    default: false  // Valeur par défaut
+    default: false
+  },
+  category: {
+    type: String,
+    enum: ['Personnel', 'Travail', 'Courses', 'Autre'],
+    default: 'Autre'
+  },
+  // Référence à l'utilisateur propriétaire
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-}, {
-  timestamps: true  // Ajoute createdAt et updatedAt
 });
 
-module.exports = mongoose.model('Todo', todoSchema);
+const Todo = mongoose.model('Todo', todoSchema);
+
+module.exports = Todo;

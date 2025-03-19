@@ -1,5 +1,5 @@
 # Makefile
-.PHONY: up down build logs ps clean
+.PHONY: up down build logs ps clean prune
 
 # Démarrer tous les conteneurs
 up:
@@ -33,4 +33,6 @@ ps:
 shell-%:
 	docker compose exec $* sh
 
-#testor pullrequest
+# Supprimer les images non utilisées
+prune:
+	docker image prune -f

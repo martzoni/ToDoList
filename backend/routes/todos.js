@@ -1,59 +1,84 @@
+// backend/routes/todos.js
 const express = require('express');
 const router = express.Router();
 const Todo = require('../models/Todo');
+const auth = require('../middleware/auth');
 
-// GET tous les todos
+// Toutes les routes sont maintenant protégées par le middleware auth
+router.use(auth);
+
+// Récupérer toutes les tâches de l'utilisateur connecté
 router.get('/', async (req, res) => {
   try {
-    const todos = await Todo.find();
+    const todos = await Todo.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.json(todos);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Erreur lors de la récupération des tâches:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la récupération des tâches.' });
   }
 });
 
-// POST nouveau todo
+// Créer une nouvelle tâche pour l'utilisateur connecté
 router.post('/', async (req, res) => {
   try {
-    const todo = new Todo({
-      text: req.body.text,
-      category: req.body.category
+    const { title, description, category } = req.body;
+
+    const newTodo = new Todo({
+      title,
+      description,
+      category,
+      user: req.user.id  // Associer la tâche à l'utilisateur connecté
     });
-    const newTodo = await todo.save();
-    res.status(201).json(newTodo);
+
+    const savedTodo = await newTodo.save();
+    res.status(201).json(savedTodo);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur lors de la création de la tâche:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la création de la tâche.' });
   }
 });
 
-// PUT toggle todo
+// Mettre à jour une tâche (vérifier que l'utilisateur est le propriétaire)
 router.put('/:id', async (req, res) => {
   try {
-    const todo = await Todo.findById(req.params.id);
-    if (todo) {
-      todo.completed = !todo.completed;
-      const updatedTodo = await todo.save();
-      res.json(updatedTodo);
-    } else {
-      res.status(404).json({ message: "Todo non trouvé" });
+    const { title, description, completed, category } = req.body;
+
+    // Vérifier que la tâche appartient à l'utilisateur connecté
+    let todo = await Todo.findOne({ _id: req.params.id, user: req.user.id });
+
+    if (!todo) {
+      return res.status(404).json({ message: 'Tâche introuvable ou accès non autorisé.' });
     }
+
+    // Mettre à jour la tâche
+    todo = await Todo.findByIdAndUpdate(
+      req.params.id,
+      { title, description, completed, category },
+      { new: true }
+    );
+
+    res.json(todo);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur lors de la mise à jour de la tâche:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la mise à jour de la tâche.' });
   }
 });
 
-// DELETE todo
+// Supprimer une tâche (vérifier que l'utilisateur est le propriétaire)
 router.delete('/:id', async (req, res) => {
   try {
-    const todo = await Todo.findById(req.params.id);
-    if (todo) {
-      await todo.deleteOne();
-      res.status(204).send();
-    } else {
-      res.status(404).json({ message: "Todo non trouvé" });
+    // Vérifier que la tâche appartient à l'utilisateur connecté
+    const todo = await Todo.findOne({ _id: req.params.id, user: req.user.id });
+
+    if (!todo) {
+      return res.status(404).json({ message: 'Tâche introuvable ou accès non autorisé.' });
     }
+
+    await Todo.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Tâche supprimée avec succès.' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Erreur lors de la suppression de la tâche:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la suppression de la tâche.' });
   }
 });
 
