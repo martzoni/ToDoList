@@ -1,14 +1,18 @@
-# frontend/Dockerfile
 FROM node:20
 
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-RUN npm install -D typescript @types/react @types/react-dom @vitejs/plugin-react
 
+# Copier les fichiers de configuration
+COPY package*.json ./
+COPY tsconfig*.json ./
+COPY vite.config.ts ./
+
+# Installation de toutes les dépendances, y compris les devDependencies
+RUN npm install
+
+# Copier le reste des fichiers source
 COPY . .
 
 EXPOSE 5173
 
-# Utiliser node avec le flag --experimental-modules
-CMD ["node", "--experimental-modules", "node_modules/vite/bin/vite.js", "--host"]
+CMD ["npm", "run", "dev"]

@@ -1,18 +1,40 @@
-interface NavbarProps {
-	title?: string;  // ? signifie optionnel
-  }
+// frontend/src/components/Navbar.tsx
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-function Navbar({ title = "Ma Todo List" }: NavbarProps) {
-	return (
-	  <nav style={{
-		padding: '1rem',
-		backgroundColor: '#333',
+const Navbar: React.FC = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
-		color: 'white'
-	  }}>
-		<h1>{title}</h1>
-	  </nav>
-	);
-  }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
-  export default Navbar;
+  return (
+    <nav className="navbar">
+      <div className="navbar-logo">
+        <Link to="/">Todo App</Link>
+      </div>
+
+      <div className="navbar-menu">
+        {isAuthenticated ? (
+          <>
+            <span className="navbar-username">Bonjour, {user?.username}</span>
+            <button className="navbar-logout" onClick={handleLogout}>
+              Déconnexion
+            </button>
+          </>
+        ) : (
+          <>
+            <Link className="navbar-link" to="/login">Connexion</Link>
+            <Link className="navbar-link" to="/register">Inscription</Link>
+          </>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
