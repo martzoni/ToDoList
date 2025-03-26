@@ -4,22 +4,22 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT}:${VITE_FRONTEND_PORT}"
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    environment:
-      - VITE_HOST=0.0.0.0
+    env_file:
+      - .env
 
   backend:
     build: ./backend
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     volumes:
       - ./backend:/app
       - /app/node_modules
-    environment:
-      - NODE_ENV=development
+    env_file:
+      - .env
 
   mongodb:
     image: mongo:latest

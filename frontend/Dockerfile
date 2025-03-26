@@ -7,12 +7,18 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY vite.config.ts ./
 
-# Installation de toutes les dépendances, y compris les devDependencies
+# Copier les fichiers d'environnement
+COPY .env* ./
+
+# Installation des dépendances
 RUN npm install
 
-# Copier le reste des fichiers source
+# Copier le reste des fichiers
 COPY . .
 
-EXPOSE 5173
+ARG FRONTEND_PORT=5173
+ENV VITE_FRONTEND_PORT=$FRONTEND_PORT
+
+EXPOSE ${VITE_FRONTEND_PORT}
 
 CMD ["npm", "run", "dev"]
