@@ -2,6 +2,10 @@
 
 A modern task management application built with React, Node.js, and MongoDB.
 
+## 📸 Screenshot
+
+![ToDoList App Screenshot](.github/images/app-screenshot.png)
+
 ## 🚀 Features
 
 - User authentication (register/login)
@@ -113,11 +117,6 @@ Create a `.env` file in the root directory with the following variables:
 NODE_ENV=development
 APP_NAME=ToDoList
 FRONTEND_PORT=4242
-BACKEND_PORT=3000
-API_URL=http://backend:3000
+BACKEND_PORT=3000API_URL=http://backend:3000
 MONGODB_URI=mongodb://mongodb:27017/todolist
 ```
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
