@@ -109,14 +109,3 @@ cd backend
 npm install
 npm run dev
 ```
-
-### Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
-```
-NODE_ENV=development
-APP_NAME=ToDoList
-FRONTEND_PORT=4242
-BACKEND_PORT=3000API_URL=http://backend:3000
-MONGODB_URI=mongodb://mongodb:27017/todolist
-```
